@@ -1,2 +1,2 @@
 # coursera-test
-Coursera test 
+Hi, I'm making my own website on GitHub Pages
