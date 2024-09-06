@@ -1,28 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Chat</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Video Chat</h1>
-    <video id="localVideo" autoplay playsinline></video>
-    <video id="remoteVideo" autoplay playsinline></video>
-
-    <script>
-        const localVideo = document.getElementById('localVideo');
-        const remoteVideo = document.getElementById('remoteVideo');
-
-        // Запрос доступа к камере и микрофону
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then(stream => {
-                localVideo.srcObject = stream;
-
-                // Здесь можно добавить код для отправки потока на удаленный сервер
-                // и получения удаленного потока для отображения в remoteVideo
-            })
-            .catch(error => {
-                console.error('Error accessing media devices.', error);
-            });
-    </script>
+    <h1>Video Chat Application</h1>
+    <div class="video-container">
+        <video id="localVideo" autoplay muted></video>
+        <video id="remoteVideo" autoplay></video>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
