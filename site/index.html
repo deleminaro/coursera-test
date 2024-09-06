@@ -1,19 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Interface</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Video Chat</title>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-box" id="chatBox"></div>
-        <div class="input-container">
-            <textarea id="userInput" placeholder="Type a message..."></textarea>
-            <button id="sendButton">Send</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    <h1>Video Chat</h1>
+    <video id="localVideo" autoplay playsinline></video>
+    <video id="remoteVideo" autoplay playsinline></video>
+
+    <script>
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+
+        // Запрос доступа к камере и микрофону
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                localVideo.srcObject = stream;
+
+                // Здесь можно добавить код для отправки потока на удаленный сервер
+                // и получения удаленного потока для отображения в remoteVideo
+            })
+            .catch(error => {
+                console.error('Error accessing media devices.', error);
+            });
+    </script>
 </body>
 </html>
