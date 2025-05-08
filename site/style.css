@@ -1,27 +1,105 @@
+/* CSS Variables for Theming */
+:root {
+    /* Light Theme */
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --container-bg: #fff;
+    --input-bg: #fff;
+    --input-border: #ddd;
+    --input-focus-border: #ff5500;
+    --button-bg: #ff5500;
+    --button-text: #fff;
+    --button-hover-bg: #cc4400;
+    --item-bg: #f9f9f9;
+    --item-border: #eee;
+    --player-bg: #e9e9e9;
+    --soundcloud-orange: #ff5500;
+    --shadow-color: rgba(0,0,0,0.1);
+    --error-text: #D8000C;
+    --error-bg: #FFD2D2;
+    --info-text: #00529B;
+    --info-bg: #BDE5F8;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --container-bg: #2c2c2c;
+    --input-bg: #3a3a3a;
+    --input-border: #555;
+    --input-focus-border: #ff7733;
+    --button-bg: #ff7733;
+    --button-text: #1a1a1a;
+    --button-hover-bg: #e6621f;
+    --item-bg: #333;
+    --item-border: #444;
+    --player-bg: #252525;
+    --soundcloud-orange: #ff7733;
+    --shadow-color: rgba(0,0,0,0.4);
+    --error-text: #ff9999;
+    --error-bg: #5c1f1f;
+    --info-text: #a1cff8;
+    --info-bg: #1e3a4a;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-    color: #333;
+    padding: 0; /* Changed to 0 for full width header */
+    background-color: var(--bg-color);
+    color: var(--text-color);
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align to top */
+    flex-direction: column; /* For header and container */
+    align-items: center;
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
+.app-header {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-start; /* Aligns button to the left */
+    box-sizing: border-box;
+    background-color: var(--container-bg); /* Match container or specific header bg */
+    box-shadow: 0 2px 5px var(--shadow-color);
+    margin-bottom: 20px;
+}
+
+#themeToggle {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    font-size: 1.5em; /* Larger icon */
+    padding: 5px 10px;
+    border-radius: 50%; /* Circular button */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    line-height: 1; /* Helps center icon if it's text-based */
+}
+
+#themeToggle:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    transform: scale(1.1);
+}
+
+
 .container {
-    background-color: #fff;
+    background-color: var(--container-bg);
     padding: 25px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px var(--shadow-color);
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
+    transition: background-color 0.3s;
 }
 
 h1 {
-    color: #ff5500; /* SoundCloud Orange */
+    color: var(--soundcloud-orange);
     text-align: center;
+    margin-top: 0;
     margin-bottom: 25px;
 }
 
@@ -34,65 +112,76 @@ h1 {
 input[type="text"] {
     flex-grow: 1;
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
     border-radius: 4px;
     font-size: 16px;
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 input[type="text"]:focus {
     outline: none;
-    border-color: #ff5500;
-    box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.2);
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--input-focus-border) 20%, transparent);
 }
 
-button {
+button { /* General button styles, play button overrides some */
     padding: 12px 20px;
-    background-color: #ff5500;
-    color: white;
+    background-color: var(--button-bg);
+    color: var(--button-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 500;
     transition: background-color 0.2s ease-in-out;
 }
 
 button:hover {
-    background-color: #cc4400;
+    background-color: var(--button-hover-bg);
 }
 
 .player-container {
     margin-top: 20px;
     padding: 15px;
-    background-color: #e9e9e9;
+    background-color: var(--player-bg);
     border-radius: 4px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--item-border); /* Match item border */
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .now-playing {
     font-weight: bold;
     margin-bottom: 10px;
-    color: #333;
+    color: var(--text-color);
 }
 
 audio {
     width: 100%;
 }
+/* Styling for browser's default audio player is limited but some themes might affect it */
+audio::-webkit-media-controls-panel {
+  background-color: var(--item-bg); /* Example for Chrome */
+  color: var(--text-color);
+}
 
 .results-grid {
     margin-top: 25px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .track-item {
-    background-color: #f9f9f9;
+    background-color: var(--item-bg);
     padding: 15px;
-    border: 1px solid #eee;
+    border: 1px solid var(--item-border);
     border-radius: 6px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .track-artwork img {
@@ -100,9 +189,9 @@ audio {
     height: auto;
     border-radius: 4px;
     margin-bottom: 10px;
-    object-fit: cover; /* Ensures image covers the area nicely */
-    aspect-ratio: 1 / 1; /* Makes artwork square */
-    background-color: #eee; /* Placeholder color if image is missing */
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    background-color: var(--bg-color); /* Placeholder bg */
 }
 
 .track-info {
@@ -114,23 +203,23 @@ audio {
     font-weight: bold;
     font-size: 1.1em;
     margin-bottom: 5px;
-    /* Ellipsis for long titles */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text-color);
 }
 
 .track-artist {
     font-size: 0.9em;
-    color: #555;
+    color: color-mix(in srgb, var(--text-color) 70%, transparent); /* Slightly muted */
     margin-bottom: 8px;
 }
 
 .play-button {
     padding: 10px 15px;
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50; /* Green - kept constant for play action or use a variable */
     color: white;
-    width: 100%; /* Make button full width of its container */
+    width: 100%;
 }
 
 .play-button:hover {
@@ -139,21 +228,23 @@ audio {
 
 .message-area {
     margin-top: 20px;
-    padding: 10px;
+    padding: 12px 15px;
     text-align: center;
-    font-size: 1.1em;
+    font-size: 1.05em;
+    border-radius: 4px;
+    display: none; /* Hidden by default, shown by JS */
 }
 
 .message-area.error {
-    color: #D8000C;
-    background-color: #FFD2D2;
-    border: 1px solid #D8000C;
-    border-radius: 4px;
+    color: var(--error-text);
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-text);
+    display: block;
 }
 
 .message-area.info {
-    color: #00529B;
-    background-color: #BDE5F8;
-    border: 1px solid #00529B;
-    border-radius: 4px;
+    color: var(--info-text);
+    background-color: var(--info-bg);
+    border: 1px solid var(--info-text);
+    display: block;
 }
