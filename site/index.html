@@ -9,7 +9,14 @@
 <body data-theme="light"> <!-- Default theme -->
 
     <header class="app-header">
-        <button id="themeToggle" aria-label="Toggle theme">🌙</button>
+        <div class="theme-switch-wrapper">
+            <span class="theme-icon sun-icon">☀️</span>
+            <label class="theme-switch" for="themeSwitchCheckbox" aria-label="Toggle theme">
+                <input type="checkbox" id="themeSwitchCheckbox" />
+                <span class="slider round"></span>
+            </label>
+            <span class="theme-icon moon-icon">🌙</span>
+        </div>
     </header>
 
     <div class="container">
