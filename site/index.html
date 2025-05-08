@@ -4,197 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoundCloud API Player</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input[type="text"] {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: calc(100% - 120px);
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #ff5500; /* SoundCloud Orange */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #cc4400;
-        }
-        #results {
-            margin-top: 20px;
-        }
-        .track-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .track-item:last-child {
-            border-bottom: none;
-        }
-        .track-info {
-            flex-grow: 1;
-        }
-        .track-title {
-            font-weight: bold;
-        }
-        .track-artist {
-            font-size: 0.9em;
-            color: #666;
-        }
-        .play-button {
-            padding: 8px 12px;
-            background-color: #4CAF50; /* Green */
-        }
-        .play-button:hover {
-            background-color: #45a049;
-        }
-        #player-container {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9e9e9;
-            border-radius: 4px;
-        }
-        #now-playing {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        audio {
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div class="container">
         <h1>SoundCloud Song Search & Play</h1>
 
-        <input type="text" id="searchInput" placeholder="Search for a song...">
-        <button onclick="searchTracks()">Search</button>
+        <div class="search-area">
+            <input type="text" id="searchInput" placeholder="Search for a song...">
+            <button id="searchButton">Search</button>
+        </div>
 
-        <div id="player-container" style="display: none;">
-            <div id="now-playing">Now Playing: <span></span></div>
+        <div id="player-container" class="player-container" style="display: none;">
+            <div id="now-playing" class="now-playing">Now Playing: <span></span></div>
             <audio id="audioPlayer" controls></audio>
         </div>
 
-        <div id="results">
+        <div id="results" class="results-grid">
             <!-- Search results will be appended here -->
         </div>
+        <div id="message" class="message-area"></div>
     </div>
 
-    <script>
-        const CLIENT_ID = 'f6k2kBKdKxsBaJCEeHQHScqQLINy5UUN';
-        const API_BASE_URL = 'https://api.soundcloud.com';
-
-        const searchInput = document.getElementById('searchInput');
-        const resultsContainer = document.getElementById('results');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const nowPlayingSpan = document.querySelector('#now-playing span');
-        const playerContainer = document.getElementById('player-container');
-
-        async function searchTracks() {
-            const query = searchInput.value.trim();
-            if (!query) {
-                alert('Please enter a search term.');
-                return;
-            }
-
-            resultsContainer.innerHTML = '<p>Searching...</p>'; // Loading indicator
-
-            try {
-                // Note: The 'resolve' endpoint is useful for getting full track details from a URL
-                // but for search, '/tracks' is more direct.
-                const response = await fetch(`${API_BASE_URL}/tracks?q=${encodeURIComponent(query)}&client_id=${CLIENT_ID}&limit=20`);
-
-                if (!response.ok) {
-                    throw new Error(`SoundCloud API error: ${response.status} ${response.statusText}`);
-                }
-
-                const tracks = await response.json();
-                displayResults(tracks);
-
-            } catch (error) {
-                console.error('Error fetching tracks:', error);
-                resultsContainer.innerHTML = `<p>Error fetching tracks: ${error.message}. Check console for details.</p>`;
-            }
-        }
-
-        function displayResults(tracks) {
-            resultsContainer.innerHTML = ''; // Clear previous results or loading message
-
-            if (!tracks || tracks.length === 0) {
-                resultsContainer.innerHTML = '<p>No tracks found.</p>';
-                return;
-            }
-
-            tracks.forEach(track => {
-                if (track.streamable) { // Only show streamable tracks
-                    const trackItem = document.createElement('div');
-                    trackItem.className = 'track-item';
-
-                    const trackInfo = document.createElement('div');
-                    trackInfo.className = 'track-info';
-                    trackInfo.innerHTML = `
-                        <div class="track-title">${track.title}</div>
-                        <div class="track-artist">By: ${track.user.username}</div>
-                        <div class="track-genre">Genre: ${track.genre || 'N/A'}</div>
-                    `;
-
-                    const playButton = document.createElement('button');
-                    playButton.textContent = 'Play';
-                    playButton.className = 'play-button';
-                    playButton.onclick = () => playTrack(track);
-
-                    trackItem.appendChild(trackInfo);
-                    trackItem.appendChild(playButton);
-                    resultsContainer.appendChild(trackItem);
-                }
-            });
-        }
-
-        function playTrack(track) {
-            if (!track.stream_url) {
-                alert('This track does not have a streamable URL.');
-                return;
-            }
-            playerContainer.style.display = 'block';
-            const streamUrlWithClient = `${track.stream_url}?client_id=${CLIENT_ID}`;
-            audioPlayer.src = streamUrlWithClient;
-            nowPlayingSpan.textContent = `${track.title} - ${track.user.username}`;
-            audioPlayer.play()
-                .catch(error => {
-                    console.error("Error playing track:", error);
-                    nowPlayingSpan.textContent = `Error: Could not play ${track.title}`;
-                    // Sometime direct stream fails due to CORS or other policies set by SoundCloud
-                    // or if the track is not allowed for API streaming.
-                    alert(`Could not play track. Reason: ${error.message}. This might be due to SoundCloud's streaming policies for this specific track.`);
-                });
-        }
-
-        // Allow search on Enter key press
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                searchTracks();
-            }
-        });
-
-    </script>
-
+    <script src="js/script.js"></script>
 </body>
 </html>
