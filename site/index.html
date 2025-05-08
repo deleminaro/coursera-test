@@ -6,7 +6,11 @@
     <title>SoundCloud API Player</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-theme="light"> <!-- Default theme -->
+
+    <header class="app-header">
+        <button id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </header>
 
     <div class="container">
         <h1>SoundCloud Song Search & Play</h1>
@@ -21,10 +25,10 @@
             <audio id="audioPlayer" controls></audio>
         </div>
 
+        <div id="messageArea" class="message-area"></div>
         <div id="results" class="results-grid">
             <!-- Search results will be appended here -->
         </div>
-        <div id="message" class="message-area"></div>
     </div>
 
     <script src="js/script.js"></script>
